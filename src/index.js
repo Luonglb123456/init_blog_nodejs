@@ -6,8 +6,17 @@ const app = express()
 const port = 3000
 
 app.use(express.static(path.join(__dirname, 'public')))
+
+const route = require('./routes')
+
+//middleware xử lý thông tin được gửi serve
+app.use(express.urlencoded({
+  extended: true
+}))
+app.use(express.json())
+
 //http logger
-app.use(morgan('combined'))
+// app.use(morgan('combined'))
 
 //template engine
 app.engine('hbs', handlebars({
@@ -16,12 +25,8 @@ app.engine('hbs', handlebars({
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'resources\\views'));
 
-app.get('/', (req, res) => {
-  res.render('home')
-})
-app.get('/news', (req, res) => {
-  res.render('news')
-})
+//Route init
+route(app)
 
 app.listen(port, () => {
   console.log(`Example app listening on http://localhost:${port}`)
